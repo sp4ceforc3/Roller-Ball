@@ -32,6 +32,11 @@ public class LevelManager : MonoBehaviour
     public enum GameState { Playing, Won, Lose }
     public GameState gameState;
 
+    // Item
+    public int cntItems = 0;
+    [SerializeField] public int totalCntItems = 2;
+    [SerializeField] TextMeshProUGUI cntItemsText;
+
     // Levelname
     private LevelLoader.Level levelName;
 
@@ -98,9 +103,10 @@ public class LevelManager : MonoBehaviour
     public void HandleItem(GameObject item) 
     {
         sfxSrc.PlayOneShot(collectSound);
-
-        // TODO: ...
-
+        cntItems += 1;
+        cntItemsText.text = $"Collected Items: {cntItems.ToString()}";
+        if (totalCntItems == cntItems)
+            cntItemsText.color = new Color(0, 255, 0, 255);
         Destroy(item);
     }
 
