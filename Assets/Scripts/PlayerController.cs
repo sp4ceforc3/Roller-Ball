@@ -42,7 +42,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        moveVector = playerControls.Player.Move.ReadValue<Vector3>();
+        if (levelManager.gameState != LevelManager.GameState.Playing) {
+            Renderer renderer = gameObject.GetComponent<Renderer>();
+            renderer.material.color = Color.clear; //this will immediately change the color to the transparent.. and only for that specific object
+        } else {
+            moveVector = playerControls.Player.Move.ReadValue<Vector3>();
+        }
         
         if(!godmode)
         {
@@ -62,11 +67,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
                 }                
                 jump = false;
             }
-        }  
+        }
     }
 
     // Detect and handle collision with other objects
@@ -106,7 +106,8 @@ public class PlayerController : MonoBehaviour
 
                 //** Finish
                 case nameof(LevelManager.CollisionObjects.Goal):
-                    levelManager.LoadEndScreen(LevelManager.GameState.Won);
+                    if (levelManager.cntItems == levelManager.totalCntItems)
+                        levelManager.LoadEndScreen(LevelManager.GameState.Won);
                     break;
 
                 default:
